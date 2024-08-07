@@ -10,8 +10,6 @@ from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
 from streamlit_float import *
 
-st.set_page_config(page_title="Streamlit Chat Interface Improvement",
-                   page_icon="🤩")
 
 # initialize float feature/capability
 float_init()

@@ -3,8 +3,8 @@ import uuid
 import streamlit.components.v1 as components
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
-shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;", 
-               "box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;", 
+shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
+               "box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;",
                "box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;",
                "box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;",
                "box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;",
@@ -32,29 +32,31 @@ shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                "box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"
                ]
 
-transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", 
-                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.2, 0.6, 0.85, 0.55);", 
-                   "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;",
-                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(1.000, 0.010, 0.30, 1.000);"
-                   ]
+transition_list = [
+    "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);",
+    "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.2, 0.6, 0.85, 0.55);",
+    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;",
+    "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(1.000, 0.010, 0.30, 1.000);"
+    ]
+
 
 def theme_init(include_unstable_primary=False):
     if include_unstable_primary:
         javascript_end = """
     prev = cont.previousElementSibling;
     first = prev.previousElementSibling;          
-    
+
     primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
     styleObj.setProperty('--default-primaryColor', primaryColor);
     first.style.setProperty('display', 'none');
-    
+
     cont.style.setProperty('display', 'none');
     prev.style.setProperty('display', 'none');
 </script>"""
     else:
         javascript_end = """
     prev = cont.previousElementSibling;          
-        
+
     cont.style.setProperty('display', 'none');
     prev.style.setProperty('display', 'none');
 </script>"""
@@ -73,20 +75,21 @@ def theme_init(include_unstable_primary=False):
     styleObj.setProperty('--default-backgroundColor', bgColor);
     styleObj.setProperty('--default-textColor', color);
     styleObj.setProperty('--default-font', font);
-                        
+
     cont = window.parent.document.getElementById("elim").parentElement;
     while (!cont.classList.contains("element-container")){
         cont = cont.parentElement;            
     }
-""" + javascript_end, 
-            height=0, 
-            width=0)
+""" + javascript_end,
+                    height=0,
+                    width=0)
     if include_unstable_primary:
         st.button("", type="primary")
     st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
 
+
 def float_init(theme=True, include_unstable_primary=False):
-# add css to streamlit app
+    # add css to streamlit app
     html_style = '''
     <style>
     div.element-container:has(div.float) {
@@ -117,6 +120,7 @@ def float_init(theme=True, include_unstable_primary=False):
     if theme:
         theme_init(include_unstable_primary=include_unstable_primary)
 
+
 # adds empty div to parent in order to target it with css
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def float_parent(css=None):
@@ -142,7 +146,8 @@ def float_parent(css=None):
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
         return 'div:has( >.element-container div.float)'
 
-# float container via its delta generator 
+
+# float container via its delta generator
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def sf_float(self, css=None):
     if css is not None:
@@ -167,11 +172,14 @@ def sf_float(self, css=None):
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
         return 'div:has( >.element-container div.float)'
 
+
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
 st.delta_generator.DeltaGenerator.float = sf_float
 
+
 # create a floating box containing markdown content
-def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
+def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None,
+              border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
     jct_css = "width: " + width + "; height: " + height + ";border-radius: 0.5rem;padding: 1rem;padding-left: 1.3rem;padding-right: 1.3rem;"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
         jct_css += shadow_list[int(shadow)]
@@ -206,8 +214,10 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
     return 'div:has( >.element-container div.flt-' + new_id + ')'
 
+
 # helper function to create css string
-def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css="", **kwargs):
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None,
+                     border=None, shadow=None, transition=None, z_index=None, sticky=False, css="", **kwargs):
     jct_css = ""
     if width is not None:
         jct_css += "width: " + width + ";"
@@ -249,9 +259,11 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
     return jct_css
 
-# Create a floating dialog container 
+
+# Create a floating dialog container
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="top", transition_to="center", css=""):
+def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="top",
+                 transition_to="center", css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     if transition_from == "top":
@@ -278,7 +290,7 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, tran
             visible_background_pos_css = "top: 50%;transform: translateY(-50%) scale(1);"
             visible_dialog_pos_css = "top: 50%;transform: translateX(-50%) translateY(-50%) scale(1);"
 
-    with float_col_a:    
+    with float_col_a:
         dialog_container = st.container()
 
     if show:
@@ -295,14 +307,16 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, tran
     else:
         transition_css = ""
 
-    float_col_b.float(float_css_helper(width="100%", height="100%", left="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + background_pos_css))
-    float_col_a.float("padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;z-index: 999900;" + dialog_pos_css + transition_css + css + "transition-property: top, bottom;background-color: " + background + ";")
+    float_col_b.float(float_css_helper(width="100%", height="100%", left="0", background="rgba(0, 0, 0, 0.4)",
+                                       css="z-index: 999000;" + background_pos_css))
+    float_col_a.float(
+        "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;z-index: 999900;" + dialog_pos_css + transition_css + css + "transition-property: top, bottom;background-color: " + background + ";")
     return dialog_container
 
 
 def float_overlay(show=False, z_index="999999", color="#000000", alpha=0.0, blur="1rem", filter=None):
     if color.startswith("#"):
-        color += ("0%x" % int(255*alpha))[-2:]
+        color += ("0%x" % int(255 * alpha))[-2:]
     elif color.startswith("rgb"):
         color = color.replace(")", f", {alpha})")
 
@@ -310,6 +324,7 @@ def float_overlay(show=False, z_index="999999", color="#000000", alpha=0.0, blur
         backdrop_filter = filter
     else:
         backdrop_filter = "blur(" + blur + ")"
-        
+
     if show:
-        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color, backdrop_filter=backdrop_filter, z_index=z_index))   
+        float_box("", width="100%", height="100%", left="0", top="0",
+                  css=float_css_helper(background=color, backdrop_filter=backdrop_filter, z_index=z_index))
