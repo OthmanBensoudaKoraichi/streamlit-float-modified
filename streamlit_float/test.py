@@ -5,7 +5,7 @@ float_init()
 
 # cola, colb = st.columns([2, 1])
 
-# with cola:    
+# with cola:
 #     dialog_container = st.container()
 #     with dialog_container:
 #         st.text_input("Enter your name", key="name")
@@ -28,7 +28,7 @@ with dialog:
     message = st.text_area("Enter your message", key="message")
     if st.button("Send", key="send"):
         st.session_state.dialog = False
-        st.experimental_rerun()
+        st.rerun()
 
 t = 'A faster way to build and share data apps'
 col1, col2, col3 = st.columns([9, 4, 4])
@@ -36,7 +36,7 @@ col1, col2, col3 = st.columns([9, 4, 4])
 with col1:
     if st.button("Click me"):
         st.session_state.dialog = True
-        st.experimental_rerun()
+        st.rerun()
     for i in range(0, 30):
         st.header("Today's news")
         st.write(t)
